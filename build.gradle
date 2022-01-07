@@ -1,0 +1,60 @@
+import java.nio.charset.StandardCharsets
+
+plugins {
+    id 'java'
+    id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'org.ajoberstar.reckon' version '0.13.0'
+}
+
+def generalCharset = StandardCharsets.UTF_8.name();
+
+reckon {
+    scopeFromProp()
+    stageFromProp('dev', 'beta', 'rc', 'final')
+}
+
+group = pluginGroup
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+compileJava.options.encoding = generalCharset
+compileTestJava.options.encoding = generalCharset
+javadoc.options.encoding = generalCharset
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://papermc.io/repo/repository/maven-public/'
+    }
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.18.1-R0.1-SNAPSHOT'
+    implementation group: 'mc.leaf', name: 'leaf-core', version: '0.1.0-beta.0.11+fc9c18c'
+    implementation group: 'org.jetbrains', name: 'annotations', version: '22.0.0'
+}
+
+processResources {
+    def props = [version: version.toString()]
+    inputs.properties props
+    filteringCharset generalCharset
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+jar {
+    destinationDirectory = file("build/plugin")
+    archiveFileName = pluginName + ".jar"
+}
+
+test {
+    useJUnitPlatform()
+}

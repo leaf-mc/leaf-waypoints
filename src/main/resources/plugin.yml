@@ -1,0 +1,9 @@
+name: LeafWaypoints
+version: '${version}'
+main: mc.leaf.modules.waypoints.LeafWaypoints
+api-version: 1.18
+prefix: LeafTweaks
+depend: [ LeafCore ]
+authors: [ alexpado ]
+description: Transportation convenience !
+website: https://github.com/alexpado
